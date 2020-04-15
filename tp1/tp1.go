@@ -1,5 +1,9 @@
 package tp1
 
+import (
+	"log"
+)
+
 // Producto contiene metodos que nos permiten acceder
 // a atributos que esperamos de un Producto.
 type Producto interface {
@@ -24,7 +28,27 @@ type Carrito struct {
 // para cada super mercado, cuanto saldria comprar esos productos ahi.
 // Retorna un slice de carritos, donde se tiene uno para cada super mercado.
 func (p Productos) CalcularPrecios(ids ...int) []Carrito {
-	return nil
+
+	tiendas := make(map[string]int)
+
+	for _, producto := range ids {
+		log.Println(producto)
+		/*tienda := producto
+		precio := producto
+		value, ok := tiendas[tienda]
+		if ok {
+			tiendas[tienda] += precio
+		} else {
+			tiendas[tienda] = precio
+		}
+		*/
+	}
+	var carritos = []Carrito{}
+	for tienda, precio := range tiendas {
+		carritos = append(carritos, Carrito{Tienda: tienda, Precio: precio})
+	}
+	log.Println(carritos)
+	return carritos
 }
 
 // Promedio recibe el id de un producto y retorna el precio promedio
