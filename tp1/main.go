@@ -56,7 +56,7 @@ func main() {
 
 	// Parseo de productos y cálculo de carritos
 	tiendas := make(map[string]int)
-	precios := make(map[string][]int)
+	precios := make(map[string][]Carrito)
 
 	for _, producto := range productos {
 		tienda := producto[0]
@@ -74,9 +74,9 @@ func main() {
 		// recopila precios de cada producto
 		_, ok = precios[id]
 		if ok {
-			precios[id] = append(precios[id], precio)
+			precios[id] = append(precios[id], Carrito{Tienda: tienda, Precio: precio})
 		} else {
-			precios[id] = []int{precio}
+			precios[id] = []Carrito{Carrito{Tienda: tienda, Precio: precio}}
 		}
 
 	}
@@ -84,32 +84,31 @@ func main() {
 	for tienda, precio := range tiendas {
 		carritos = append(carritos, Carrito{Tienda: tienda, Precio: precio})
 	}
-	fmt.Println("Carritos completado:", carritos)
+	fmt.Println("Carritos completado:", carritos, "\n")
 
 	preciosMedios := make(map[string]float64)
+	precioMinimo := make(map[string]Carrito)
 
 	for id, listaDePrecios := range precios {
 		var total int = 0
-		for _, v := range listaDePrecios {
-			total += v
+		for _, item := range listaDePrecios {
+			total += item.Precio
+
+			_, ok := precioMinimo[id]
+			if ok {
+				if item.Precio < precioMinimo[id].Precio {
+					precioMinimo[id] = item
+				}
+			} else {
+				precioMinimo[id] = item
+			}
 		}
 		preciosMedios[id] = float64(total) / float64(len(listaDePrecios))
-	}
-
-	fmt.Println("Precios medios:", preciosMedios)
-
-	// Promedio recibe el id de un producto y retorna el precio promedio
-	// de ese producto usando los precios de todos los supermercados.
-	/*func (p Productos) Promedio(idProducto int) float64 {
-			return 0
-		}
 
 	}
-	// BuscarMasBarato recibe un id de producto a buscar y te retorna
-	// el producto mas barato que haya encontrado.
-	func (p Productos) BuscarMasBarato(idProducto int) (Producto, bool) {
-		return nil, false
-	}
 
-	*/
+	fmt.Println("Precios medios:", preciosMedios, "\n")
+
+	fmt.Println("Precios mínimos:", precioMinimo, "\n")
+
 }
